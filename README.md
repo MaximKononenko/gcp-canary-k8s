@@ -39,6 +39,12 @@ ___
 
 ## Build & deploy
 
+Compile the app by building the binary:
+
+```bash
+$ GOOS=linux GOARCH=amd64 go build -tags netgo -o app
+```
+
 Build docker image with app v1.0 and push to GCR:
 
 ```bash
