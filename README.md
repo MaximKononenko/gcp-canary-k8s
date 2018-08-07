@@ -19,6 +19,14 @@ Create cluster:
 ```bash
 $ gcloud container clusters create canary
 $ kubectl cluster-info
+Kubernetes master is running at https://35.229.96.254
+GLBCDefaultBackend is running at https://35.229.96.254/api/v1/namespaces/kube-system/services/default-http-backend:http/proxy
+Heapster is running at https://35.229.96.254/api/v1/namespaces/kube-system/services/heapster/proxy
+KubeDNS is running at https://35.229.96.254/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+kubernetes-dashboard is running at https://35.229.96.254/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy
+Metrics-server is running at https://35.229.96.254/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+
+To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
 ```
 
 Create prod namespace in GKE:
@@ -70,17 +78,25 @@ Deploy app v1.0 to k8s:
 ```bash
 $ kubectl --namespace=production apply -f app-production.yml
 $ kubectl --namespace=production rollout status deployment/kubeapp-production
+Waiting for rollout to finish: 1 of 3 updated replicas are available...
+Waiting for rollout to finish: 2 of 3 updated replicas are available...
+deployment "kubeapp-production" successfully rolled out
 #check status
 $ kubectl --namespace=production get pods -o wide
+NAME                                 READY     STATUS    RESTARTS   AGE       IP           NODE
+kubeapp-production-b9cfb665c-4shn9   1/1       Running   0          19h       10.60.1.15   gke-canary-default-pool-832370c5-n803
+kubeapp-production-b9cfb665c-n9d88   1/1       Running   0          19h       10.60.1.13   gke-canary-default-pool-832370c5-n803
+kubeapp-production-b9cfb665c-px6np   1/1       Running   0          19h       10.60.1.14   gke-canary-default-pool-832370c5-n803
+
 #checking events
 $ kubectl --namespace=production get events -w
 ```
 
 ___
 
-## Expose service using GCP LB
+## Expose service using GCE LB
 
-[logo]: https://cdn-images-1.medium.com/max/1080/1*QZMJoE5e7sooxAa2KhrI8g.png (LB)
+![LB](https://cdn-images-1.medium.com/max/1080/1*QZMJoE5e7sooxAa2KhrI8g.png "GCE LB")
 
 ```bash
 $ kubectl --namespace=production apply -f app-lb.yml
