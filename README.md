@@ -119,10 +119,10 @@ We can also extract the IP address of the LB using this one-liner:
 ```bash
 $ export SERVICE_IP=$(kubectl --namespace=production get service/app-lb --output=json | jq -r '.status.loadBalancer.ingress[0].ip')
 
-$ curl http://$SERVICE_IP/
+$ curl -s http://$SERVICE_IP/
 Congratulations! Version 1.0 of your application is running on Kubernetes.
 
-$ curl http://$SERVICE_IP/version
+$ curl -s http://$SERVICE_IP/version
 1.0
 ```
 
@@ -181,7 +181,7 @@ kubeapp-production-1443420586-vf9x6   1/1       Running   0          1h
 Simulate users hitting the app:
 
 ```bash
-$ for i in `seq 1 10`; do curl http://$SERVICE_IP/version; sleep 1;  done
+$ for i in `seq 1 10`; do curl -s http://$SERVICE_IP/version; sleep 1;  done
 1.0
 1.0
 1.0
@@ -249,20 +249,20 @@ Events:
 $ export INGRESS_IP=$(kubectl --namespace=production get ing/app-ingress --output=json | jq -r '.status.loadBalancer.ingress[0].ip')
 $ echo "$INGRESS_IP foo.bar canary.foo.bar" | sudo tee -a /etc/hosts
 
-$ curl http://foo.bar/
+$ curl -s http://foo.bar/
 Congratulations! Version 1.0 of your application is running on Kubernetes.
 
-$ curl http://foo.bar/version
+$ curl -s http://foo.bar/version
 1.0
 
-$ curl http://canary.foo.bar/
+$ curl -s http://canary.foo.bar/
 Congratulations! Version 2.0 of your application is running on Kubernetes.
 
-$ curl http://canary.foo.bar/version
+$ curl -s http://canary.foo.bar/version
 2.0
 ```
 
-To recreate production namcpace use:
+To recreate production namspace use:
 
 ```bash
 kubectl delete namespace production && kubectl create namespace production
